@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gemini Image Studio</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#6366f1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="icon-192.png">
+</head>
+
+<body>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js');
+            });
+        }
+    </script>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="logo">Gemini Image Studio</div>
+            <nav class="nav-tabs">
+                <div class="nav-tab active" data-tab="text-to-image">
+                    <span>🎨</span> Текст в изображение
+                </div>
+                <div class="nav-tab" data-tab="image-editing">
+                    <span>✨</span> Редактирование
+                </div>
+                <div class="nav-tab" data-tab="multi-turn">
+                    <span>💬</span> Чат-сессия
+                </div>
+                <div class="nav-tab" data-tab="reference">
+                    <span>🖼️</span> По образцам
+                </div>
+                <div class="nav-tab" data-tab="grounding">
+                    <span>🔍</span> Поиск Google
+                </div>
+            </nav>
+
+            <div style="margin-top: auto;">
+                <label>API Ключ</label>
+                <input type="password" id="api-key" placeholder="Введите ключ...">
+            </div>
+        </aside>
+
+        <main class="content">
+            <div class="api-badge">
+                <div class="status-dot" id="status-dot"></div>
+                <span id="status-text">Симуляция активна</span>
+            </div>
+
+            <!-- Text to Image Tab -->
+            <section id="text-to-image" class="tab-panel active">
+                <h2>Текст в изображение</h2>
+                <p class="subtitle">Создавайте визуальные шедевры из текстовых описаний.</p>
+
+                <div class="form-group">
+                    <label>Описание (Prompt)</label>
+                    <textarea id="tti-prompt" placeholder="Опишите, что вы хотите увидеть..."></textarea>
+                </div>
+
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Модель</label>
+                        <select id="tti-model">
+                            <option value="imagen-3.0-generate-002">Imagen 3.0</option>
+                            <option value="gemini-3-pro-image-preview">Gemini 3 Pro Image</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Соотношение сторон</label>
+                        <select id="tti-aspect">
+                            <option value="1:1">1:1 (Квадрат)</option>
+                            <option value="16:9">16:9 (Широкий экран)</option>
+                            <option value="9:16">9:16 (Портрет)</option>
+                            <option value="4:3">4:3</option>
+                            <option value="3:2">3:2</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Количество (1-4)</label>
+                        <input type="number" id="tti-count" value="1" min="1" max="4">
+                    </div>
+                    <div class="form-group">
+                        <label>Разрешение (Качество)</label>
+                        <select id="tti-res">
+                            <option value="hd">HD (Стандартное)</option>
+                            <option value="fhd">Full HD (Высокое)</option>
+                            <option value="2k">2K (Ультра)</option>
+                            <option value="4k">4K (Максимальное)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Формат вывода</label>
+                    <select id="tti-format">
+                        <option value="image/png">PNG</option>
+                        <option value="image/jpeg">JPEG</option>
+                    </select>
+                </div>
+
+                <button class="btn" onclick="generate('text-to-image')">Сгенерировать</button>
+            </section>
+
+            <!-- Image Editing Tab -->
+            <section id="image-editing" class="tab-panel">
+                <h2>Редактирование изображений</h2>
+                <p class="subtitle">Изменяйте готовые изображения с помощью Inpainting/Outpainting.</p>
+
+                <div class="form-group">
+                    <label>Исходное изображение</label>
+                    <div class="file-drop-zone" onclick="document.getElementById('edit-image-file').click()">
+                        Нажмите для загрузки или перетащите файл
+                        <input type="file" id="edit-image-file" hidden accept="image/*">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Что изменить? (Prompt)</label>
+                    <textarea id="edit-prompt"
+                        placeholder="Например: добавь футуристические очки персонажу..."></textarea>
+                </div>
+
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Разрешение</label>
+                        <select id="edit-res">
+                            <option value="1k">1K</option>
+                            <option value="2k">2K</option>
+                            <option value="4k">4K</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Маска (Опционально)</label>
+                        <input type="file" id="edit-mask" accept="image/*">
+                    </div>
+                </div>
+
+                <button class="btn" onclick="generate('image-editing')">Обновить</button>
+            </section>
+
+            <!-- Multi-turn Chat Tab -->
+            <section id="multi-turn" class="tab-panel">
+                <h2>Многоэтапный чат</h2>
+                <p class="subtitle">Взаимодействие с моделью в формате диалога с изображениями.</p>
+
+                <div id="chat-history"
+                    style="height: 300px; overflow-y: auto; background: rgba(0,0,0,0.1); border-radius: 12px; padding: 1rem; margin-bottom: 1.5rem;">
+                    <!-- Chat messages will appear here -->
+                    <div style="color: var(--text-muted); text-align: center; margin-top: 100px;">История чата пока
+                        пуста</div>
+                </div>
+
+                <div class="form-group">
+                    <label>Ваше сообщение</label>
+                    <textarea id="chat-msg" placeholder="Введите ваш запрос..."></textarea>
+                </div>
+
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Вложение</label>
+                        <input type="file" id="chat-attachment" accept="image/*">
+                    </div>
+                    <div class="form-group">
+                        <label>Тип ответа</label>
+                        <select id="chat-modalities">
+                            <option value="IMAGE">Только изображение</option>
+                            <option value="TEXT,IMAGE">Текст и изображение</option>
+                            <option value="TEXT">Только текст</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button class="btn" onclick="generate('multi-turn')">Отправить</button>
+            </section>
+
+            <!-- Reference Images Tab -->
+            <section id="reference" class="tab-panel">
+                <h2>Генерация по образцам</h2>
+                <p class="subtitle">Используйте до 14 эталонных изображений для контроля стиля и содержания.</p>
+
+                <div class="form-group">
+                    <label>Эталонные изображения</label>
+                    <div class="file-drop-zone" onclick="document.getElementById('ref-files').click()">
+                        Выберите до 14 файлов...
+                        <input type="file" id="ref-files" multiple hidden accept="image/*">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Инструкции (Prompt)</label>
+                    <textarea id="ref-prompt"
+                        placeholder="Опишите, как объединить стили этих изображений..."></textarea>
+                </div>
+
+                <button class="btn" onclick="generate('reference')">Сгенерировать</button>
+            </section>
+
+            <!-- Grounding Tab -->
+            <section id="grounding" class="tab-panel">
+                <h2>Генерация с поиском Google</h2>
+                <p class="subtitle">Повышайте точность деталей с помощью Google Search Grounding.</p>
+
+                <div class="form-group">
+                    <label>Текстовый запрос</label>
+                    <textarea id="ground-prompt"
+                        placeholder="Например: реалистичное фото Эйфелевой башни на закате с учетом текущей погоды..."></textarea>
+                </div>
+
+                <div class="form-group" style="display: flex; align-items: center; gap: 10px;">
+                    <input type="checkbox" id="use-search" checked>
+                    <label for="use-search" style="margin-bottom: 0;">Включить поиск Google (Google Search
+                        Grounding)</label>
+                </div>
+
+                <button class="btn" onclick="generate('grounding')">Сгенерировать</button>
+            </section>
+
+            <!-- Results Section -->
+            <div class="result-area">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <h3>Результат</h3>
+                    <div id="loading-spinner" style="display: none; color: var(--primary);">⏳ Генерация...</div>
+                </div>
+                <div class="preview-container" id="result-preview">
+                    Здесь появится сгенерированное изображение
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
