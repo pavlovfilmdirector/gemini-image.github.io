@@ -1,5 +1,5 @@
 
-const apiKey = 'AIzaSyAyP49VacmWYDRuLa32_xbhQdzTHs_8e4E';
+const apiKey = 'API';
 
 async function testKey() {
     try {
@@ -21,3 +21,4 @@ async function testKey() {
 }
 
 testKey();
+
