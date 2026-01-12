@@ -1,5 +1,5 @@
 // KEY PROVIDED BY USER
-const API_KEY = 'AIzaSyDsGIb6Vu45gcisZq3VQDubo15vbVkPB4M';
+const API_KEY = 'API';
 const MODEL_NAME = 'gemini-2.5-flash-image';
 
 async function testGeneration() {
@@ -55,3 +55,4 @@ async function testGeneration() {
 }
 
 testGeneration();
+
