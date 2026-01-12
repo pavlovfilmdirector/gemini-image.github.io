@@ -42,6 +42,41 @@
                 </div>
             </nav>
 
+            <!-- Sidebar Settings -->
+            <div style="margin-top: 2rem; border-top: 1px solid var(--glass-border); padding-top: 1rem;">
+                <h3 style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem;">Настройки генерации</h3>
+
+                <div class="form-group">
+                    <label>Модель</label>
+                    <select id="tti-model">
+                        <option value="gemini-3-pro-image-preview">NanoBananaPro (Pro)</option>
+                        <option value="gemini-2.5-flash-image">NanoBanana (Flash)</option>
+                        <option value="imagen-3.0-generate-002">Imagen 3.0</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Соотношение</label>
+                    <select id="tti-aspect">
+                        <option value="1:1">1:1 (Square)</option>
+                        <option value="16:9">16:9 (Landscape)</option>
+                        <option value="9:16">9:16 (Portrait)</option>
+                        <option value="4:3">4:3</option>
+                        <option value="3:2">3:2</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Качество</label>
+                    <select id="tti-res">
+                        <option value="hd">HD (Standard)</option>
+                        <option value="fhd">Full HD (High)</option>
+                        <option value="2k">2K (Ultra)</option>
+                        <option value="4k">4K (Max)</option>
+                    </select>
+                </div>
+            </div>
+
             <div style="margin-top: auto;">
                 <label>API Ключ</label>
                 <input type="password" id="api-key" placeholder="Введите ключ...">
@@ -64,57 +99,13 @@
                     <textarea id="tti-prompt" placeholder="Опишите, что вы хотите увидеть..."></textarea>
                 </div>
 
-                <div class="grid-2">
-                    <div class="form-group">
-                        <label>Модель</label>
-                        <select id="tti-model">
-                            <option value="imagen-3.0-generate-002">Imagen 3.0</option>
-                            <option value="gemini-3-pro-image-preview">Gemini 3 Pro Image</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Соотношение сторон</label>
-                        <select id="tti-aspect">
-                            <option value="1:1">1:1 (Квадрат)</option>
-                            <option value="16:9">16:9 (Широкий экран)</option>
-                            <option value="9:16">9:16 (Портрет)</option>
-                            <option value="4:3">4:3</option>
-                            <option value="3:2">3:2</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="grid-2">
-                    <div class="form-group">
-                        <label>Количество (1-4)</label>
-                        <input type="number" id="tti-count" value="1" min="1" max="4">
-                    </div>
-                    <div class="form-group">
-                        <label>Разрешение (Качество)</label>
-                        <select id="tti-res">
-                            <option value="hd">HD (Стандартное)</option>
-                            <option value="fhd">Full HD (Высокое)</option>
-                            <option value="2k">2K (Ультра)</option>
-                            <option value="4k">4K (Максимальное)</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>Формат вывода</label>
-                    <select id="tti-format">
-                        <option value="image/png">PNG</option>
-                        <option value="image/jpeg">JPEG</option>
-                    </select>
-                </div>
-
                 <button class="btn" onclick="generate('text-to-image')">Сгенерировать</button>
             </section>
 
             <!-- Image Editing Tab -->
             <section id="image-editing" class="tab-panel">
-                <h2>Редактирование изображений</h2>
-                <p class="subtitle">Изменяйте готовые изображения с помощью Inpainting/Outpainting.</p>
+                <h2>Редактирование (Inpainting)</h2>
+                <p class="subtitle">Загрузите фото и закрасьте область, которую нужно изменить.</p>
 
                 <div class="form-group">
                     <label>Исходное изображение</label>
@@ -124,63 +115,59 @@
                     </div>
                 </div>
 
+                <!-- Canvas Editor -->
+                <div class="form-group" id="canvas-container" style="display:none;">
+                    <label>Создание маски (рисуйте поверх изображения)</label>
+                    <div class="editor-wrapper"
+                        style="position: relative; width: 100%; max-width: 512px; margin: 0 auto; border: 1px solid var(--glass-border); border-radius: 8px; overflow: hidden; touch-action: none;">
+                        <img id="edit-source-img"
+                            style="display: block; width: 100%; height: auto; pointer-events: none;">
+                        <canvas id="mask-canvas"
+                            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; cursor: crosshair;"></canvas>
+                    </div>
+
+                    <div class="canvas-controls"
+                        style="display: flex; gap: 10px; margin-top: 10px; align-items: center; justify-content: center;">
+                        <label style="margin:0; font-size: 0.8rem;">Кисть:</label>
+                        <input type="range" id="brush-size" min="5" max="50" value="20" style="width: 100px;">
+                        <button class="btn-micro" onclick="clearMask()"
+                            style="background: var(--bg-tertiary); border: 1px solid var(--glass-border);">🧹 Стереть
+                            маску</button>
+                    </div>
+                </div>
+
                 <div class="form-group">
                     <label>Что изменить? (Prompt)</label>
                     <textarea id="edit-prompt"
                         placeholder="Например: добавь футуристические очки персонажу..."></textarea>
                 </div>
 
-                <div class="grid-2">
-                    <div class="form-group">
-                        <label>Разрешение</label>
-                        <select id="edit-res">
-                            <option value="1k">1K</option>
-                            <option value="2k">2K</option>
-                            <option value="4k">4K</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Маска (Опционально)</label>
-                        <input type="file" id="edit-mask" accept="image/*">
-                    </div>
-                </div>
-
                 <button class="btn" onclick="generate('image-editing')">Обновить</button>
             </section>
 
-            <!-- Multi-turn Chat Tab -->
+            <!-- Context Mode (ex. Multi-turn) -->
             <section id="multi-turn" class="tab-panel">
-                <h2>Многоэтапный чат</h2>
-                <p class="subtitle">Взаимодействие с моделью в формате диалога с изображениями.</p>
+                <h2>Контекстный режим</h2>
+                <p class="subtitle">Генерация с памятью: каждый новый запрос учитывает предыдущий результат.</p>
 
-                <div id="chat-history"
-                    style="height: 300px; overflow-y: auto; background: rgba(0,0,0,0.1); border-radius: 12px; padding: 1rem; margin-bottom: 1.5rem;">
-                    <!-- Chat messages will appear here -->
-                    <div style="color: var(--text-muted); text-align: center; margin-top: 100px;">История чата пока
-                        пуста</div>
-                </div>
+                <!-- Hidden Chat History (Removed visual clutter) -->
 
                 <div class="form-group">
-                    <label>Ваше сообщение</label>
-                    <textarea id="chat-msg" placeholder="Введите ваш запрос..."></textarea>
+                    <label>Ваш запрос</label>
+                    <textarea id="chat-msg" placeholder="Например: Сделай его в стиле киберпанк..."></textarea>
                 </div>
 
                 <div class="grid-2">
                     <div class="form-group">
-                        <label>Вложение</label>
+                        <label>Стартовое фото (Опционально)</label>
                         <input type="file" id="chat-attachment" accept="image/*">
                     </div>
                     <div class="form-group">
-                        <label>Тип ответа</label>
-                        <select id="chat-modalities">
-                            <option value="IMAGE">Только изображение</option>
-                            <option value="TEXT,IMAGE">Текст и изображение</option>
-                            <option value="TEXT">Только текст</option>
-                        </select>
+                        <!-- Placeholder for future options -->
                     </div>
                 </div>
 
-                <button class="btn" onclick="generate('multi-turn')">Отправить</button>
+                <button class="btn" onclick="generate('multi-turn')">Сгенерировать</button>
             </section>
 
             <!-- Reference Images Tab -->
@@ -193,6 +180,12 @@
                     <div class="file-drop-zone" onclick="document.getElementById('ref-files').click()">
                         Выберите до 14 файлов...
                         <input type="file" id="ref-files" multiple hidden accept="image/*">
+                    </div>
+                    <div style="text-align: right; margin-top: 8px;">
+                        <button class="btn-micro" id="clear-ref-btn"
+                            style="background: transparent; border: 1px solid var(--glass-border); color: var(--text-muted); padding: 4px 10px; font-size: 0.8rem;">
+                            ❌ Сбросить
+                        </button>
                     </div>
                 </div>
 

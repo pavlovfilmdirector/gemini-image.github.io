@@ -1,111 +1,148 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&family=Roboto:wght@400;500&display=swap');
 
 :root {
-    --primary: #6366f1;
-    --primary-hover: #4f46e5;
-    --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
-    --bg-solid: #0f172a;
-    --glass-bg: rgba(255, 255, 255, 0.05);
-    --glass-border: rgba(255, 255, 255, 0.15);
-    --text-main: #ffffff;
-    --text-muted: #cbd5e0;
-    /* Значительно светлее для высокого контраста */
-    --text-inactive: #a0aec0;
-    --accent: #8b5cf6;
-    --success: #10b981;
-    --radius: 16px;
-    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    /* Цветовая палитра из agentapp_rust */
+    --bg-primary: #0a0a0a;
+    --bg-secondary: #0d1117;
+    /* Чуть темнее для сайдбара, как в GitHub Dark */
+    --bg-tertiary: #1f1f1f;
+    --bg-hover: #2d2d2d;
+    --bg-active: #4772b3;
+
+    --text-main: #f0f0f0;
+    --text-muted: #999999;
+    --text-inactive: #555555;
+
+    --primary: #4772b3;
+    /* Accent Blue */
+    --primary-hover: #3a9fd9;
+    --accent: #db9300;
+    /* Yellow/Orange accent */
+    --success: #56ad56;
+    /* Green accent */
+
+    --glass-bg: rgba(10, 10, 10, 0.95);
+    /* Почти непрозрачный */
+    --glass-border: rgba(255, 255, 255, 0.08);
+
+    --radius: 8px;
+    --shadow-premium: 0 8px 32px rgba(0, 0, 0, 0.8);
+    --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Inter', 'Roboto', sans-serif;
 }
 
 body {
-    background: var(--bg-solid);
-    background: var(--bg-gradient);
+    background: var(--bg-primary);
     color: var(--text-main);
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 2rem;
+    font-size: 13px;
+    /* Slightly larger base than agentapp's 10px for better web readability */
     overflow-x: hidden;
 }
 
 .container {
     width: 100%;
-    max-width: 1200px;
-    background: var(--glass-bg);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    max-width: 1400px;
+    background: var(--bg-primary);
     border: 1px solid var(--glass-border);
-    border-radius: 24px;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    border-radius: 12px;
+    box-shadow: var(--shadow-premium);
     display: grid;
-    grid-template-columns: 320px 1fr;
-    min-height: 800px;
+    grid-template-columns: 260px 1fr;
+    min-height: 850px;
     overflow: hidden;
 }
 
 /* Sidebar & Navigation */
 .sidebar {
-    background: rgba(15, 23, 42, 0.9);
-    /* Более солидный темный фон */
+    background: var(--bg-secondary);
     border-right: 1px solid var(--glass-border);
-    padding: 2rem;
+    padding: 1.5rem;
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 1.5rem;
 }
 
 .logo {
     font-family: 'Outfit', sans-serif;
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     font-weight: 700;
-    background: linear-gradient(to right, #818cf8, #c084fc);
+    color: var(--text-main);
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.02em;
+    background: linear-gradient(90deg, #4facfe 0%, #a18cd1 50%, #fbc2eb 100%);
+    /* Gemini-like Blue-Purple-Peach */
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    margin-bottom: 1rem;
+    display: inline-block;
 }
 
 .nav-tabs {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 4px;
 }
 
 .nav-tab {
-    padding: 1rem 1.25rem;
-    border-radius: var(--radius);
+    padding: 10px 12px;
+    border-radius: 6px;
     cursor: pointer;
     transition: var(--transition);
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 10px;
     color: var(--text-muted);
-    /* Использование обновленного цвета */
     font-weight: 500;
+    font-size: 13px;
     border: 1px solid transparent;
 }
 
 .nav-tab:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--bg-hover);
     color: var(--text-main);
 }
 
 .nav-tab.active {
-    background: var(--primary);
+    background: var(--bg-active);
     color: white;
-    box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.3);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.nav-tab span {
+    font-size: 1.1em;
+}
+
+/* Input Fields in Sidebar (API Key) */
+.sidebar input[type="password"],
+.sidebar input[type="text"] {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--glass-border);
+    color: var(--text-main);
+    border-radius: 4px;
+    padding: 8px 10px;
+    font-size: 12px;
+}
+
+.sidebar input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(71, 114, 179, 0.2);
+    background: #000;
 }
 
 /* Main Content Area */
 .content {
-    padding: 2.5rem;
+    background: var(--bg-primary);
+    padding: 2rem;
     overflow-y: auto;
     position: relative;
     max-height: 90vh;
@@ -113,7 +150,7 @@ body {
 
 .tab-panel {
     display: none;
-    animation: fadeIn 0.4s ease-out;
+    animation: fadeIn 0.3s ease-out;
 }
 
 .tab-panel.active {
@@ -123,7 +160,7 @@ body {
 @keyframes fadeIn {
     from {
         opacity: 0;
-        transform: translateY(10px);
+        transform: translateY(5px);
     }
 
     to {
@@ -134,57 +171,59 @@ body {
 
 h2 {
     font-family: 'Outfit', sans-serif;
-    font-size: 2rem;
-    margin-bottom: 0.5rem;
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    color: var(--text-main);
 }
 
 .subtitle {
     color: var(--text-muted);
-    margin-bottom: 2.5rem;
+    margin-bottom: 2rem;
+    font-size: 0.95rem;
 }
 
 /* Form Styling */
 .form-group {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.25rem;
 }
 
 label {
     display: block;
-    margin-bottom: 0.5rem;
-    font-size: 0.9rem;
-    font-weight: 600;
+    margin-bottom: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
     color: var(--text-muted);
 }
 
 input[type="text"],
 textarea,
-select {
+select,
+input[type="number"] {
     width: 100%;
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--bg-tertiary);
     border: 1px solid var(--glass-border);
-    border-radius: 12px;
-    padding: 0.875rem 1rem;
-    color: white;
+    border-radius: 6px;
+    padding: 10px 12px;
+    color: var(--text-main);
     outline: none;
     transition: var(--transition);
+    font-family: 'Inter', monospace;
+    /* Monospace feel for inputs like agentapp */
+    font-size: 13px;
 }
 
 textarea {
     resize: vertical;
-    min-height: 100px;
+    min-height: 80px;
+    line-height: 1.5;
 }
 
 input:focus,
 textarea:focus,
 select:focus {
     border-color: var(--primary);
-    background: rgba(255, 255, 255, 0.08);
-}
-
-select option {
-    background-color: #1a1c2e;
-    /* Темный фон для списка опций */
-    color: white;
+    background: #000;
 }
 
 .grid-2 {
@@ -193,35 +232,44 @@ select option {
     gap: 1.5rem;
 }
 
-/* Button Styling */
+/* Button Styling - AgentApp style (flatter, distinct borders) */
 .btn {
-    background: var(--primary);
-    color: white;
-    border: none;
-    padding: 1rem 2rem;
-    border-radius: 12px;
+    background: var(--bg-tertiary);
+    color: var(--text-main);
+    border: 1px solid var(--glass-border);
+    padding: 10px 20px;
+    border-radius: 6px;
     font-weight: 600;
+    font-size: 13px;
     cursor: pointer;
     transition: var(--transition);
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 8px;
     margin-top: 1rem;
 }
 
 .btn:hover {
-    background: var(--primary-hover);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+    background: var(--bg-hover);
+    border-color: var(--primary);
+    transform: translateY(-1px);
 }
 
-.btn:active {
-    transform: translateY(0);
+/* Special primary button style override if needed, but keeping consistent with "secondary" style is very "tool-like" */
+.btn[onclick*="generate"] {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: white;
+}
+
+.btn[onclick*="generate"]:hover {
+    background: var(--primary-hover);
+    box-shadow: 0 4px 12px rgba(71, 114, 179, 0.3);
 }
 
 /* Result Visualization Area */
 .result-area {
-    margin-top: 3rem;
+    margin-top: 2rem;
     padding-top: 2rem;
     border-top: 1px solid var(--glass-border);
 }
@@ -229,14 +277,14 @@ select option {
 .preview-container {
     width: 100%;
     min-height: 400px;
-    /* Убираем фиксированный aspect-ratio */
-    background: rgba(0, 0, 0, 0.3);
-    border-radius: var(--radius);
+    background: #000;
+    /* Deep black for image contrast */
+    border-radius: 8px;
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 2px dashed rgba(255, 255, 255, 0.1);
-    color: var(--text-muted);
+    border: 1px dashed var(--glass-border);
+    color: var(--text-inactive);
     overflow: hidden;
 }
 
@@ -244,77 +292,201 @@ select option {
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
-    animation: imageAppear 0.8s ease-out;
+    animation: imageAppear 0.5s ease-out;
 }
 
 @keyframes imageAppear {
     from {
         opacity: 0;
-        filter: blur(10px);
+        transform: scale(0.98);
     }
 
     to {
         opacity: 1;
-        filter: blur(0);
+        transform: scale(1);
     }
 }
 
-/* Skeleton loader */
+/* Skeleton loader - simpler */
 .skeleton {
     width: 80%;
-    height: 20px;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
-    background-size: 200% 100%;
-    animation: loading 1.5s infinite;
+    height: 16px;
+    background: var(--bg-tertiary);
+    animation: pulse 1.5s infinite;
     border-radius: 4px;
-    margin: 10px auto;
+    margin: 8px auto;
 }
 
-@keyframes loading {
+@keyframes pulse {
     0% {
-        background-position: 200% 0;
+        opacity: 0.6;
+    }
+
+    50% {
+        opacity: 1;
     }
 
     100% {
-        background-position: -200% 0;
+        opacity: 0.6;
     }
 }
 
-border: 2px dashed var(--glass-border);
-border-radius: 12px;
-padding: 2rem;
-text-align: center;
-cursor: pointer;
-transition: var(--transition);
+/* File Drop Zone */
+.file-drop-zone {
+    background: var(--bg-tertiary);
+    border: 1px dashed var(--glass-border);
+    border-radius: 6px;
+    padding: 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: var(--transition);
+    font-size: 13px;
+    color: var(--text-muted);
 }
 
 .file-drop-zone:hover {
     border-color: var(--primary);
-    background: rgba(255, 255, 255, 0.02);
+    background: var(--bg-hover);
 }
 
-/* Key settings indicator */
+/* Status Dot */
 .api-badge {
     position: absolute;
     top: 2rem;
     right: 2rem;
-    padding: 0.5rem 1rem;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 20px;
-    font-size: 0.8rem;
+    padding: 4px 10px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    font-size: 11px;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 6px;
+    color: var(--text-secondary);
 }
 
 .status-dot {
-    width: 8px;
-    height: 8px;
+    width: 6px;
+    height: 6px;
     border-radius: 50%;
-    background: #ef4444;
-    /* red by default */
+    background: var(--accent);
+    /* Orange/Red default */
 }
 
 .status-dot.active {
     background: var(--success);
+}
+
+/* Action Buttons in Result Area */
+.action-buttons-container {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.action-btn {
+    padding: 8px 16px;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    font-weight: 600;
+    transition: var(--transition);
+    color: white;
+}
+
+.action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: 0;
+        align-items: flex-start;
+    }
+
+    .container {
+        grid-template-columns: 1fr;
+        border-radius: 0;
+        border: none;
+        min-height: 100vh;
+    }
+
+    .sidebar {
+        border-right: none;
+        border-bottom: 1px solid var(--glass-border);
+        padding: 1rem;
+        gap: 1rem;
+    }
+
+    .logo {
+        font-size: 1.1rem;
+    }
+
+    .nav-tabs {
+        flex-direction: row;
+        overflow-x: auto;
+        padding-bottom: 4px;
+    }
+
+    .nav-tab {
+        white-space: nowrap;
+        padding: 8px 12px;
+    }
+
+    .content {
+        padding: 1.5rem;
+    }
+
+    .grid-2 {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    /* Mobile Compact Buttons */
+    .action-buttons-container {
+        gap: 8px;
+        flex-direction: row;
+        /* Keep in row but wrap */
+        justify-content: space-between;
+        /* Spread out */
+    }
+
+    .action-btn {
+        padding: 6px 10px;
+        font-size: 11px;
+        flex: 1;
+        /* Distribute equal width */
+        justify-content: center;
+        white-space: nowrap;
+    }
+
+    .action-btn svg,
+    .action-btn span:first-child {
+        font-size: 1.1em;
+        /* icon size */
+    }
+}
+
+@media (max-width: 900px) and (orientation: landscape) {
+    .container {
+        grid-template-columns: 220px 1fr;
+    }
+
+    .sidebar {
+        height: 100vh;
+        overflow-y: auto;
+        border-right: 1px solid var(--glass-border);
+        border-bottom: none;
+    }
+
+    .nav-tabs {
+        flex-direction: column;
+    }
 }

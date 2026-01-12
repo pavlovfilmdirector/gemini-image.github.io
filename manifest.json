@@ -4,6 +4,7 @@
     "description": "Профессиональная студия генерации изображений с помощью Gemini API",
     "start_url": "index.html",
     "display": "standalone",
+    "orientation": "any",
     "background_color": "#0f172a",
     "theme_color": "#6366f1",
     "icons": [
