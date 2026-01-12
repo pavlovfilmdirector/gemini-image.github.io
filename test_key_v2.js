@@ -1,5 +1,5 @@
 // KEY PROVIDED BY USER
-const API_KEY = 'AIzaSyCloyXYo2NnxuXhID_AvgFYg3azDdgaFxs';
+const API_KEY = 'API';
 const MODEL_NAME = 'gemini-3-pro-image-preview';
 
 async function testGeneration() {
@@ -56,3 +56,4 @@ async function testGeneration() {
 }
 
 testGeneration();
+
